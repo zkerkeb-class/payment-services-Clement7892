@@ -73,4 +73,25 @@ export class StripeService {
       throw error;
     }
   }
+
+  /**
+   * Crée un PaymentIntent pour Stripe Elements
+   */
+  async createPaymentIntent(
+    amount: number,
+    currency: string = "eur",
+    planId?: string
+  ): Promise<Stripe.PaymentIntent> {
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency,
+        metadata: planId ? { planId } : undefined
+      });
+      return paymentIntent;
+    } catch (error) {
+      console.error("Erreur lors de la création du PaymentIntent:", error);
+      throw error;
+    }
+  }
 }

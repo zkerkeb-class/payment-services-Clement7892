@@ -6,7 +6,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import config from "./config";
-import route from "./routes/paymentRoutes";
+import route from "./routes/index";
 import { setupSwagger } from "./config/swagger.config";
 import { logger } from "./utils/logger";
 import { errorMiddleware } from "./middlewares/error.middleware";

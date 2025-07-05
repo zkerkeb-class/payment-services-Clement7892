@@ -85,12 +85,65 @@ export class PaymentController {
         success: true,
         data: refund
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erreur lors du remboursement:", error);
       return res.status(500).json({
         success: false,
-        message: "Erreur lors du remboursement"
+        message: "Erreur lors du remboursement",
+        error: error.message || error
       });
     }
+  }
+
+  /**
+   * Crée un PaymentIntent pour Stripe Elements
+   */
+  async createPaymentIntent(req: Request, res: Response) {
+    try {
+      const { amount, currency = "eur", planId } = req.body;
+      if (!amount || amount <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Le montant doit être supérieur à 0"
+        });
+      }
+      const paymentIntent = await stripeService.createPaymentIntent(
+        amount,
+        currency,
+        planId
+      );
+      return res.status(200).json({
+        success: true,
+        data: paymentIntent
+      });
+    } catch (error: any) {
+      console.error(
+        "Erreur lors de la création du PaymentIntent:",
+        error,
+        error?.message,
+        error?.stack
+      );
+      return res.status(500).json({
+        success: false,
+        message: "Erreur lors de la création du PaymentIntent",
+        error: error?.message || error
+      });
+    }
+  }
+
+  /**
+   * Gère les webhooks Stripe (à compléter selon tes besoins)
+   */
+  async handleWebhook(req: Request, res: Response) {
+    // À personnaliser selon la logique Stripe
+    res.status(200).json({ received: true });
+  }
+
+  /**
+   * Récupère les paiements d'un client (à compléter selon ta logique)
+   */
+  async getCustomerPayments(req: Request, res: Response) {
+    // À personnaliser selon ta logique de stockage/Stripe
+    res.status(200).json({ success: true, data: [] });
   }
 }
